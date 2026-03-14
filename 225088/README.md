@@ -305,3 +305,54 @@ VD: "hello    world" --> "helloworld"
 #### Bài 6:
 Viết chương trình in hoa chữ cái đầu tiên của từ
 VD: "hello world" --> "Hello World"
+
+---
+# HÀM - FUNCTION
+- Khi làm việc với hàm cần chú ý:
+	+ Chức nâng của hàm
+	+ Input của hàm
+	+ Output của hàm
+## Xây dựng hàm
+- kiểu dữ liệu
+	+ void - 0 byte - void*
+	+ char - 1 byte - char*
+	+ short - 2 byte - short*
+	+ int - 4 byte - int*
+	+ long long - 8 byte - long long*
+	+ float - 4 byte - float*
+	+ double - 8 byte - double*
+```c
+<kiểu dữ liệu output> ten_ham(<các biến miêu tả input>)
+{
+	// nội dung của hàm
+
+	return ketqua;
+}
+```
+ví dụ: xây dựng hàm kiểm tra một số nguyên là chẳn hay lẻ
+- chức nâng của hàm: hàm này dùng để kiểm tra số nguyên là chẳn hay lẻ
+- input: int so_nguyen
+- output: quy định 0 là chẳn, 1 là lẻ
+```
+char kiem_tra_chan_le(int so_nguyen)
+{
+	char ketqua = 0;
+	if(so_nguyen % 2 == 0)
+		ketqua = 1;
+	else
+		ketqua = 0;
+	return ketqua;
+}
+```
+## Sử dụng hàm
+```c
+void main()
+{
+	int x = 10;
+	char chan_le = kiem_tra_chan_le(x);
+	if(chan_le == 0)
+		printf("x la so chan \n");
+	else
+		printf("x la so le \n");
+}
+```
