@@ -356,3 +356,33 @@ void main()
 		printf("x la so le \n");
 }
 ```
+---
+# CẤP PHÁT ĐỘNG
+
+- Khai báo một mảng, bao gồm 10 đối tượng `int`
+```
+int arr1[10];
+```
+- Số lượng đối tượng phải là một con số, không được phép là biến
+- `arr1` không thể thay đổi kích thước của mảng
+- Không được phép:
+```
+int kich_thuoc = 10;
+int arr1[kich_thuoc];
+```
+## Sử dụng hàm `malloc` hoặc `calloc`
+- Chủ động cấp phát vùng nhớ
+- `malloc`
+	+ input: (int) số byte cần cấp phát
+	+ output: (void*) *ĐỊA CHỈ* vùng nhớ vừa được cấp phát
+	```
+	int kich_thuoc = 10;
+	char* px = malloc(kich_thuoc);
+	*px = 20;
+	px[0] = 20;
+	
+	*(px+1) = 21;
+	px[1] = 21;
+	```
+- `malloc`: khi sử dụng hàm này để cấp phát memory, OS sẽ lấy memory ở vùng nhớ HEAP để cấp phát
+- vùng nhớ sẽ tồn tại ĐẾN KHI NÀO được giải phóng bằng cách sử dụng hàm `free`
