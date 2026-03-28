@@ -386,3 +386,89 @@ int arr1[kich_thuoc];
 	```
 - `malloc`: khi sử dụng hàm này để cấp phát memory, OS sẽ lấy memory ở vùng nhớ HEAP để cấp phát
 - vùng nhớ sẽ tồn tại ĐẾN KHI NÀO được giải phóng bằng cách sử dụng hàm `free`
+---
+# TẠO RA KIỂU DỮ LIỆU MỚI
+- sử dụng từ khóa `typedef` để tạo ra kiểu dữ liệu mới
+```
+typedef <định nghĩa của kiểu dữ liệu mới> <tên kiểu dữ liệu mới>;
+```
+
+VD: tạo ra kiểu dữ liệu mới dựa trên dữ liệu củ là `int`
+```
+typedef int so_nguyen_t;
+```
+- thay vi khai báo biến `x` có kiểu dữ liệu là `int`
+```
+int x = 10;
+```
+- khai báo biến `x` có kiểu dữ liệu `so_nguyen_t`
+```
+so_nguyen_t x = 10;
+```
+---
+# STRUCT - kiểu cấu trúc
+## cú pháp 
+```
+struct <ten_struct>
+{
+	<phần tử của struct>;
+	<phần tử của struct>;
+	...
+	<phần tử của struct>;
+};
+```
+
+VD: khai báo _kiểu dữ liệu mới_ để miêu tả đối tượng là PHÂN SỐ
+```
+struct phan_so_s
+{
+	int tu;
+	int mau;
+};
+```
+- Lúc này ngoài `int`, `short`, `float`, ... thì chúng ta có thêm một kiểu dữ liệu mới là `struct phan_so_s`
+- khai báo biến A có kiểu dữ liệu là `struct phan_so_s`:
+```
+int x;
+struct phan_so_s A;
+struct phan_so_s B;
+```
+- sử dụng biến đã được khai báo:
+```
+x = 10;
+printf("x: %d", x);
+
+A.tu = 10;
+A.mau = 20;
+
+B.tu = 2;
+B.mau = 3;
+```
+
+VD: viết HÀM tính tích của 2 phân số
+```
+/**
+* @brief tính tích 2 phân số
+* @param [IN] A phân số 1
+* @param [IN] B phân số 2
+* @return phân số
+*/
+```
+
+
+```
+struct phan_so_s
+{
+	int tu;
+	int mau;
+};
+
+typedef struct phan_so_s phan_so_t;
+```
+```
+typedef struct  
+{
+	int tu;
+	int mau;
+} phan_so_t;
+```

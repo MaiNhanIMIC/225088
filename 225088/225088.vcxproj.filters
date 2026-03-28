@@ -21,6 +21,9 @@
     <ClCompile Include="toan.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="mang_co_gian.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
