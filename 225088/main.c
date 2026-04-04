@@ -1,114 +1,89 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 
-typedef int so_nguyen_t;	// tạo ra kiểu dữ liệu mới, dựa trên cái có sẳn
-typedef struct 
-{
-	int tu;
-	int mau;
-} phan_so_t;
+/**
+* @brief miêu tả xếp loại của học sinh
+*/
+typedef enum {
+	GIOI,			// loại GIỎI có giá trị = 0
+	KHA,			// loại KHÁ có giá trị  = 1
+	TRUNG_BINH,		// loại TRUNG BÌNH có giá trị = 2
+	YEU,			// loại YẾU có giá trị = 3
+} loai_t;
 
 /**
-* @brief tính tích 2 phân số
-* @param [IN] A phân số 1
-* @param [IN] B phân số 2
-* @return phân số
+* @brief Miêu tả đối tượng là học sinh
+* bao gồm:
+*	+ tên học sinh
+*	+ điểm toán
+*	+ điểm văn
+*	+ điểm trung
+*	+ xếp loại học sinh
 */
-phan_so_t nhan_phan_so(phan_so_t a, phan_so_t b)
+typedef struct {
+	char ten[32];			// tên của học sinh - chứa tối đa 32 ký tự
+	float diem_toan;		// điểm toán của học sinh trên than điểm 10
+	float diem_van;			// điểm văn của học sinh trên than điểm 10
+	float diem_trung_binh;	// điểm trung bình của học sinh = (điểm toán + điểm văn)/2
+	loai_t xep_loai;		// xếp loại dựa vào điểm trung bình của học sinh
+} hoc_sinh_t;
+
+#include <string.h>
+/**
+* @brief Tạo một học sinh
+* @param ten - tên của học sinh
+* @param dToan - điểm toán của học sinh
+* @param dVan - điểm văn của học sinh
+* @return trả về đối tượng học sinh
+*/
+hoc_sinh_t tao_hoc_sinh(char* ten, float dToan, float dVan)
 {
-	phan_so_t ketqua;
-	ketqua.tu = a.tu * b.tu;
-	ketqua.mau = a.mau * b.mau;
-	return ketqua;
+	hoc_sinh_t kq = { 0 };
+	memcpy(kq.ten, ten, strlen(ten));
+	kq.diem_toan = dToan;
+	kq.diem_van = dVan;
+	kq.diem_trung_binh = (dToan + dVan) / 2;
+	if (kq.diem_trung_binh >= 8.0)
+		kq.xep_loai = GIOI;
+	else if (kq.diem_trung_binh >= 6.5)
+		kq.xep_loai = KHA;
+	else if (kq.diem_trung_binh >= 5.0)
+		kq.xep_loai = TRUNG_BINH;
+	else
+		kq.xep_loai = YEU;
+
+	return kq;
 }
 
 /**
-* @brief tính tổng 2 phân số
-* @param [IN] A phân số 1
-* @param [IN] B phân số 2
-* @return phân số
+* @brief Tìm học sinh có điểm trung bình cao nhất
+* @param ds - danh sách học sinh
+* @param sl - số lượng học sinh trong danh sách
+* @return học sinh có điểm trung bình cao nhất
 */
-phan_so_t cong_phan_so(phan_so_t a, phan_so_t b)
+hoc_sinh_t tim_hoc_sinh_cao_nhat(hoc_sinh_t* ds, int sl)
 {
-	phan_so_t ketqua;
-	ketqua.tu = a.tu*b.mau +  b.tu*a.mau;
-	ketqua.mau = a.mau * b.mau;
-	return ketqua;
-}
+	hoc_sinh_t hoc_sinh_cao_diem_nhat = { 0 };
 
-/**
-* @brief rút gọn phân số
-* @param [IN] phân số cần rút gọn
-* @return phân số sau khi rút gọn
-*/
-phan_so_t rut_gon_1(phan_so_t ps)
-{
-	// min = tử hay mẫu
-	int nho_nhat = (ps.tu < ps.mau) ? ps.tu : ps.mau;
-	// vòng lập for: i chạy từ min -> 1, NẾU tử chia hết cho i VÀ mẫu chia hết cho i, thì USCLN là i, break khỏi vòng lập
-	int USCLN = 1;
-	for (int i = nho_nhat; i > 1; i = i - 1)
+	for (int i = 0; i < sl; i++)
 	{
-		if ((ps.tu % i == 0) && (ps.mau % i == 0))
-		{
-			USCLN = i;
-			break;
-		}
+		if (hoc_sinh_cao_diem_nhat.diem_trung_binh < ds[i].diem_trung_binh)
+			hoc_sinh_cao_diem_nhat = ds[i];
 	}
-	// tu của kết quả = tử của ps chia cho USCLN 
-	// mẫu của kết quả = mẫu của ps chia cho USCLN
-	phan_so_t ket_qua = { ps.tu / USCLN, ps.mau / USCLN };
 
-	// trả kết quả về
-	return ket_qua;
+	return hoc_sinh_cao_diem_nhat;
 }
 
-
-/**
-* @brief rút gọn phân số
-* @param [IN/OUT] địa chỉ của phân số cần rút gọn
-* @return none
-*/
-void rut_gon_2(phan_so_t* ps)
-{
-	int nho_nhat = (ps->tu < ps->mau) ? ps->tu : ps->mau;
-	int USCLN = 1;
-	for (int i = nho_nhat; i > 1; i = i - 1)
-	{
-		if ((ps->tu % i == 0) && (ps->mau % i == 0))
-		{
-			USCLN = i;
-			break;
-		}
-	}
-	ps->tu = ps->tu / USCLN;
-	ps->mau = ps->mau / USCLN;
-}
 
 void main()
 {
-	// khai báo mảng chưa 5 đối tượng là int và khởi tạo giá trị ban đầu cho 5 đối tượng đó
+	hoc_sinh_t danh_sach[5] = { 0 };
+	danh_sach[0] = tao_hoc_sinh("Nguyen Van A", 6, 7);
+	danh_sach[1] = tao_hoc_sinh("Nguyen Van B", 8, 7);
+	danh_sach[2] = tao_hoc_sinh("Nguyen Van C", 5, 7);
+	danh_sach[3] = tao_hoc_sinh("Nguyen Van D", 8, 9);
+	danh_sach[4] = tao_hoc_sinh("Nguyen Van E", 8, 8);
 
-	// khai báo mảng chứa 5 đối tượng là phân số và khởi tạo giá trị ban đâu cho 5 đối tượng đó
-	phan_so_t A[5] = {
-		{1,2},
-		{3,2},
-		{2,3},
-		{4,5},
-		{1,3}
-	};
-	// tìm phân số lớn nhất trong mãng
-	int vi_tri_lon_nhat = 0;
-	float gia_tri_lon_nhat = 0;
-	for (int i = 0; i < 5; i++)
-	{
-		float temp = (float)A[i].tu / (float)A[i].mau;
-		if (temp > gia_tri_lon_nhat)
-		{
-			gia_tri_lon_nhat = temp;
-			vi_tri_lon_nhat = i;
-		}
-	}
-	printf("phan so lon nhat la: %d/%d \n", A[vi_tri_lon_nhat].tu, A[vi_tri_lon_nhat].mau);
+	hoc_sinh_t hs = tim_hoc_sinh_cao_nhat(danh_sach, 5);
 }
 
