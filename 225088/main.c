@@ -1,89 +1,98 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
-
 /**
-* @brief miêu tả xếp loại của học sinh
-*/
-typedef enum {
-	GIOI,			// loại GIỎI có giá trị = 0
-	KHA,			// loại KHÁ có giá trị  = 1
-	TRUNG_BINH,		// loại TRUNG BÌNH có giá trị = 2
-	YEU,			// loại YẾU có giá trị = 3
-} loai_t;
-
-/**
-* @brief Miêu tả đối tượng là học sinh
-* bao gồm:
-*	+ tên học sinh
-*	+ điểm toán
-*	+ điểm văn
-*	+ điểm trung
-*	+ xếp loại học sinh
+* @brief miêu tả một node trong linked list
+* chứa:
+*	+ địa chỉ của node tiếp theo
+*	+ giá trị 
 */
 typedef struct {
-	char ten[32];			// tên của học sinh - chứa tối đa 32 ký tự
-	float diem_toan;		// điểm toán của học sinh trên than điểm 10
-	float diem_van;			// điểm văn của học sinh trên than điểm 10
-	float diem_trung_binh;	// điểm trung bình của học sinh = (điểm toán + điểm văn)/2
-	loai_t xep_loai;		// xếp loại dựa vào điểm trung bình của học sinh
-} hoc_sinh_t;
+	void* next_node_addr;	// địa chỉ của node tiếp theo
+	int val;				// chứa giá trị của node hiện tại
+} node_t;
 
-#include <string.h>
+
 /**
-* @brief Tạo một học sinh
-* @param ten - tên của học sinh
-* @param dToan - điểm toán của học sinh
-* @param dVan - điểm văn của học sinh
-* @return trả về đối tượng học sinh
+* @brief miêu tả một đối tượng là linked list
+* chứa:
+*	+ địa chỉ của node đầu tiên
+*	+ số lượng node
 */
-hoc_sinh_t tao_hoc_sinh(char* ten, float dToan, float dVan)
+typedef struct {
+	node_t* root;	// địa chỉ của node đầu tiên (gốc)
+	int node_num;	// số lượng node trong linked list
+} linked_list_t;
+#include <malloc.h>
+/**
+* @brief khởi tạo một đối tượng linked list với 1 node
+* @param [IN] val - giá trị của node đầu tiên
+* @param [OUT] pll - địa chỉ của đối tượng linked list sao khi được tạo
+* @return NONE
+*/
+void linked_list_create(int val, linked_list_t* pll)
 {
-	hoc_sinh_t kq = { 0 };
-	memcpy(kq.ten, ten, strlen(ten));
-	kq.diem_toan = dToan;
-	kq.diem_van = dVan;
-	kq.diem_trung_binh = (dToan + dVan) / 2;
-	if (kq.diem_trung_binh >= 8.0)
-		kq.xep_loai = GIOI;
-	else if (kq.diem_trung_binh >= 6.5)
-		kq.xep_loai = KHA;
-	else if (kq.diem_trung_binh >= 5.0)
-		kq.xep_loai = TRUNG_BINH;
-	else
-		kq.xep_loai = YEU;
+	// sử dụng cấp phát động. sử dụng hàm malloc or calloc để cấp phát vùng nhớ cho node đầu tiên
+	node_t* node = malloc(8);
+	// gán next_node_addr = 0 và val (của node) = val (của input)
+	node->next_node_addr = NULL;
+	node->val = val;
 
-	return kq;
+	// gán root của (pll) bằng địa chỉ của node được tạo bởi malloc or calloc
+	pll->root = node;
+	// gán node_num = 1
+	pll->node_num = 1;
 }
 
 /**
-* @brief Tìm học sinh có điểm trung bình cao nhất
-* @param ds - danh sách học sinh
-* @param sl - số lượng học sinh trong danh sách
-* @return học sinh có điểm trung bình cao nhất
+* @brief Thêm một node vào cuối linked list
+* @param [INT] val - giá trị của node cuối
+* @param [OUT] pll - địa chỉ của đối tượng linked list cần thêm node
+* @return NONE
 */
-hoc_sinh_t tim_hoc_sinh_cao_nhat(hoc_sinh_t* ds, int sl)
+void linked_list_add(int val, linked_list_t* pll)
 {
-	hoc_sinh_t hoc_sinh_cao_diem_nhat = { 0 };
-
-	for (int i = 0; i < sl; i++)
+	// sử dụng cấp phát động. sử dụng hàm malloc or calloc để cấp phát vùng nhớ cho node mới
+	node_t* node = malloc(sizeof(node_t));
+	// gán next_node_addr = 0 và val (của node) = val (của input)
+	node->next_node_addr = NULL;
+	node->val = val;
+	// ta có root của pll và node_num của pll --> tìm tới node cuối của linked_list này --> gán next_node_addr = node vừa tạo ra ở trên
+	node_t* lastest_node = pll->root;
+	for (int i = 0; i < pll->node_num - 1; i++)
 	{
-		if (hoc_sinh_cao_diem_nhat.diem_trung_binh < ds[i].diem_trung_binh)
-			hoc_sinh_cao_diem_nhat = ds[i];
+		lastest_node = lastest_node->next_node_addr;
 	}
-
-	return hoc_sinh_cao_diem_nhat;
+	lastest_node->next_node_addr = node;
+	// tăng node_num lên 1
+	pll->node_num++;
 }
 
+/**
+* @brief xóa một node ở vị trí index trong linked list
+* @param [INT] index - vị trí node cần xóa
+* @param [OUT] pll - địa chỉ của đối tượng linked list cần thêm node
+* @return NONE
+*/
+
+
+/**
+* @brief lấy giá trị của một node trong linked list
+* @param [INT] index - vị trí của node cần lấy giá trị
+* @param [OUT] pll - địa chỉ của đối tượng linked list cần thêm node
+* @return giá trị của node ở vị trí index
+*/
 
 void main()
 {
-	hoc_sinh_t danh_sach[5] = { 0 };
-	danh_sach[0] = tao_hoc_sinh("Nguyen Van A", 6, 7);
-	danh_sach[1] = tao_hoc_sinh("Nguyen Van B", 8, 7);
-	danh_sach[2] = tao_hoc_sinh("Nguyen Van C", 5, 7);
-	danh_sach[3] = tao_hoc_sinh("Nguyen Van D", 8, 9);
-	danh_sach[4] = tao_hoc_sinh("Nguyen Van E", 8, 8);
+	linked_list_t ll;
+	linked_list_create(1, &ll);
+	linked_list_add(2, &ll);
+	linked_list_add(3, &ll);
+	linked_list_add(4, &ll);
+	linked_list_add(5, &ll);
+	linked_list_add(6, &ll);
 
-	hoc_sinh_t hs = tim_hoc_sinh_cao_nhat(danh_sach, 5);
+
+	printf("gia tri cua ll o vi tri 3: %d", linked_list_get(3, &ll));
 }
 
